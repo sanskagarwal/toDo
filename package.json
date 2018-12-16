@@ -4,7 +4,11 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha **/*.test.js"
+  },
+  "engines": {
+    "node": "8.14.0"
   },
   "author": "Sanskar",
   "license": "ISC",
