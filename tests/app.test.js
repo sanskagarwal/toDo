@@ -28,7 +28,7 @@ describe("POST /todos", () => {
          .post('/todos')
          .send({text})
          .expect(200)
-         .expect((res)=>{
+         .expect((res)=>{ 
              expect(res.body.text).toBe(text);
          })
          .end((err,res) => {
@@ -42,7 +42,7 @@ describe("POST /todos", () => {
             }).catch((e) => done(e));
          });
     });
-    it("should not post a Todo with invalid",(done) => {
+    it("should not post a Todo with invalid data",(done) => {
         var text = "New test todo";
         request(app)
          .post('/todos')
@@ -96,6 +96,92 @@ describe("GET /todos/:id",() => {
         var id = "w76342492r"
         request(app)
          .get(`/todos/${id}`)
+         .expect(404)
+         .expect((res) => {
+             expect(res.body.error).toBe("ID not valid");
+         })
+         .end(done);
+    });
+});
+
+describe("DELETE /todos/:id",() => {
+    it("should delete a todo",(done) => {
+        var id = todos[0]._id.toHexString();
+        request(app)
+         .delete(`/todos/${id}`)
+         .expect(200)
+         .expect((res) => {
+             expect(res.body.todo._id).toBe(id);
+         })
+         .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            Todo.findById(id).then((todo) => {
+                expect(todo).toBeNull();
+                done();
+            }).catch((e) => done(e));
+         });
+    });
+    it("should return 400 if UserID not found",(done) => {
+        var id = new ObjectID().toHexString();
+        request(app)
+         .delete(`/todos/${id}`)
+         .expect(400)
+         .expect((res) => {
+             expect(res.body.error).toBe("User ID not found");
+         })
+         .end(done);
+    });
+    it("should return 404 if ID not valid",(done) => {
+        var id = "w76342492r"
+        request(app)
+         .delete(`/todos/${id}`)
+         .expect(404)
+         .expect((res) => {
+             expect(res.body.error).toBe("ID not valid");
+         })
+         .end(done);
+    });
+});
+
+describe("PATCH /todos/:id",() => {
+    it("should patch a todo",(done) => {
+        var id = todos[0]._id.toHexString();
+        var text = "What an awesome";
+        var completed = true;
+        request(app)
+         .patch(`/todos/${id}`)
+         .send({
+             text,
+             completed
+         })
+         .expect(200)
+         .expect((res) => {
+             expect(res.body.todo.text).toBe(text);
+             expect(res.body.todo.completed).toBe(completed);
+             if(completed) {
+                expect(typeof res.body.todo.completedAt).toBe('number');
+             } else {
+                expect(res.body.todo.completedAt).toBeNull();
+             }
+         })
+         .end(done);
+    });
+    it("should return 400 if UserID not found",(done) => {
+        var id = new ObjectID().toHexString();
+        request(app)
+         .patch(`/todos/${id}`)
+         .expect(400)
+         .expect((res) => {
+             expect(res.body.error).toBe("User ID not found");
+         })
+         .end(done);
+    });
+    it("should return 404 if ID not valid",(done) => {
+        var id = "w76342492r"
+        request(app)
+         .patch(`/todos/${id}`)
          .expect(404)
          .expect((res) => {
              expect(res.body.error).toBe("ID not valid");

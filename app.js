@@ -76,7 +76,7 @@ app.patch("/todos/:id", (req,res) => {
 
     Todo.findOneAndUpdate({_id: id},{$set: body},{new:true}).then((todo) => {
         if(!todo) {
-            return res.status(404).send({error: "User ID not found"});
+            return res.status(400).send({error: "User ID not found"});
         }
         res.send({todo});
     }).catch((e) => {
