@@ -4,6 +4,8 @@ var URI2 = "mongodb://localhost:27017/todo-app"; // For Testing
 mongoose.Promise = global.Promise;
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
-mongoose.connect(URI);
+mongoose.set('useCreateIndex', true);
+
+mongoose.connect(URI2);
 
 module.exports = {mongoose};
