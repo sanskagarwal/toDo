@@ -2,7 +2,12 @@ const {ObjectID} = require('mongodb');
 const {Todo} = require('./../../models/Todo.js');
 const {User} = require('./../../models/User.js');
 const jwt = require('jsonwebtoken');
-var JWT_SECRET = require("./../../config.json")['JWT_SECRET'] || process.env.JWT_SECRET;
+var JWT_SECRET;
+try {
+    JWT_SECRET = require("./../../config.json")['JWT_SECRET'];
+} catch(e) {
+    JWT_SECRET = process.env.JWT_SECRET;
+}
 
 const userOneId = new ObjectID();
 const userTwoId = new ObjectID();

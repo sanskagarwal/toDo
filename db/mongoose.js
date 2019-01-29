@@ -1,5 +1,12 @@
 var mongoose = require('mongoose');
-var URI=require("./../config.json")['MONGO_TEST'] || process.env.MONGOLAB_URI;
+
+var URI;
+try {
+    URI = require("./../config.json")['MONGO_TEST'];
+} catch(e) {
+    URI = process.env.MONGOLAB_URI;
+}
+
 mongoose.Promise = global.Promise;
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
