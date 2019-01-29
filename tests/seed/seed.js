@@ -36,10 +36,14 @@ const populateTodos = (done) => {
 
 const populateUsers = (done) => {
     User.deleteMany({}).then(() => {
-        var userOne = new User(users[0]).save();
-        var userTwo = new User(users[1]).save();
-
-        return Promise.all([userOne,userTwo]);
+        var user1 = new User(users[0]);
+        user1.save().catch((err) => {
+            console.log(err);
+        });
+        var user2 = new User(users[1]);
+        user2.save().catch((err) => {
+            console.log(err);
+        });
     }).then(() => done());
 };
 
